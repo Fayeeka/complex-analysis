@@ -1,0 +1,130 @@
+{
+  "log_source": "AzureADSignInLogs",
+  "tenantId": "a1b2c3d4-5678-90ab-cdef-1234567890ab",
+  "tenantDisplayName": "Contoso Ltd",
+  "note": "Synthetic sample data for training/detection-engineering purposes. Not from a real tenant. IP addresses are drawn from RFC 5737 documentation ranges.",
+  "signIns": [
+    {
+      "id": "5c9e1f3a-2b6d-4e8c-9a1f-3d7b5c9e1f30",
+      "createdDateTime": "2026-07-18T13:02:11.000Z",
+      "userDisplayName": "Sarah Chen",
+      "userPrincipalName": "sarah.chen@contoso.com",
+      "userId": "7d3f9a2c-4b1e-4c6a-8f0d-2e5b8a1c4d7f",
+      "appId": "00000002-0000-0ff1-ce00-000000000000",
+      "appDisplayName": "Office 365 Exchange Online",
+      "resourceDisplayName": "Office 365 Exchange Online",
+      "resourceId": "00000002-0000-0ff1-ce00-000000000000",
+      "clientAppUsed": "Browser",
+      "ipAddress": "198.51.100.23",
+      "isInteractive": true,
+      "tokenIssuerType": "AzureAD",
+      "incomingTokenType": "none",
+      "correlationId": "9b2e6d4a-1f8c-4e3b-a5d7-6c9f2a8b1e40",
+      "conditionalAccessStatus": "success",
+      "authenticationRequirement": "multiFactorAuthentication",
+      "riskDetail": "none",
+      "riskLevelAggregated": "none",
+      "riskLevelDuringSignIn": "none",
+      "riskState": "none",
+      "riskEventTypes_v2": [],
+      "status": {
+        "errorCode": 0,
+        "failureReason": "",
+        "additionalDetails": "MFA requirement satisfied by strong authentication"
+      },
+      "deviceDetail": {
+        "deviceId": "e4a7c1f0-8b3d-4a6e-9c2f-5d8b1a4e7c0f",
+        "displayName": "CORP-FIN-WK17",
+        "operatingSystem": "Windows10",
+        "browser": "Edge 126.0.2592",
+        "isCompliant": true,
+        "isManaged": true,
+        "trustType": "AzureAd"
+      },
+      "location": {
+        "city": "Chicago",
+        "state": "Illinois",
+        "countryOrRegion": "US",
+        "geoCoordinates": {
+          "latitude": 41.8781,
+          "longitude": -87.6298
+        }
+      },
+      "authenticationDetails": [
+        {
+          "authenticationStepDateTime": "2026-07-18T13:02:10.000Z",
+          "authenticationMethod": "Password",
+          "succeeded": true,
+          "authenticationStepResultDetail": "First factor requirement satisfied by password"
+        },
+        {
+          "authenticationStepDateTime": "2026-07-18T13:02:11.000Z",
+          "authenticationMethod": "Mobile app notification",
+          "succeeded": true,
+          "authenticationStepResultDetail": "MFA requirement satisfied by strong authentication"
+        }
+      ],
+      "AnalystNote": "Baseline / normal morning sign-in: known corporate egress IP, compliant/managed device, fresh password + MFA. Use this entry to establish what 'normal' looks like for this user before comparing to the entry below."
+    },
+    {
+      "id": "6d1f2e4b-3c7a-4f9d-8b2e-5a1c8d4f7b62",
+      "createdDateTime": "2026-07-18T14:47:09.000Z",
+      "userDisplayName": "Sarah Chen",
+      "userPrincipalName": "sarah.chen@contoso.com",
+      "userId": "7d3f9a2c-4b1e-4c6a-8f0d-2e5b8a1c4d7f",
+      "appId": "00000002-0000-0ff1-ce00-000000000000",
+      "appDisplayName": "Office 365 Exchange Online",
+      "resourceDisplayName": "Office 365 Exchange Online",
+      "resourceId": "00000002-0000-0ff1-ce00-000000000000",
+      "clientAppUsed": "Browser",
+      "ipAddress": "203.0.113.77",
+      "isInteractive": true,
+      "tokenIssuerType": "AzureAD",
+      "incomingTokenType": "none",
+      "correlationId": "1a4f7c0d-3e6b-4a9f-8c1d-4e7b0a3f6c9d",
+      "conditionalAccessStatus": "success",
+      "authenticationRequirement": "singleFactorAuthentication",
+      "riskDetail": "none",
+      "riskLevelAggregated": "high",
+      "riskLevelDuringSignIn": "high",
+      "riskState": "atRisk",
+      "riskEventTypes_v2": [
+        "anomalousToken",
+        "unfamiliarFeatures"
+      ],
+      "status": {
+        "errorCode": 0,
+        "failureReason": "",
+        "additionalDetails": "MFA requirement satisfied by claim in the token"
+      },
+      "deviceDetail": {
+        "deviceId": "",
+        "displayName": "",
+        "operatingSystem": "Linux",
+        "browser": "Chrome 125.0.0.0",
+        "isCompliant": false,
+        "isManaged": false,
+        "trustType": ""
+      },
+      "location": {
+        "city": "Bucharest",
+        "state": "",
+        "countryOrRegion": "RO",
+        "geoCoordinates": {
+          "latitude": 44.4268,
+          "longitude": 26.1025
+        }
+      },
+      "authenticationDetails": [
+        {
+          "authenticationStepDateTime": "2026-07-18T14:47:09.000Z",
+          "authenticationMethod": "Previously satisfied",
+          "succeeded": true,
+          "authenticationStepResultDetail": "First factor requirement satisfied by claim in the token",
+          "authenticationMethodDetail": "Previously satisfied credential"
+        }
+      ],
+      "AnalystNote": "SUSPICIOUS: no fresh password or MFA prompt - Entra recognized an already-authenticated session claim (the stolen ESTSAUTH/ESTSAUTHPERSISTENT cookie) rather than performing new interactive authentication. Source IP (203.0.113.77) matches the exfiltration destination seen ~17 minutes earlier in logs/windows/sysmon_cookie_theft.json. Device is unmanaged/non-compliant and unrecognized (different OS/browser than the user's known Windows+Edge device), and location jumps from Chicago,US to Bucharest,RO with no travel time in between (impossible travel). Identity Protection flagged 'anomalousToken' risk. conditionalAccessStatus is still 'success' here because token/cookie replay was not re-evaluated against the compliant-device Conditional Access policy - a gap that Continuous Access Evaluation (CAE) and token protection policies are designed to close."
+    }
+  ]
+}
